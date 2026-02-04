@@ -47,7 +47,7 @@ export default function Home() {
                     <ProductBottleScroll product={product} />
 
                     {/* Product Details Section */}
-                    <div className="bg-white/90 backdrop-blur-lg relative z-20 rounded-t-[3rem] -mt-24 pb-24 border-t border-white/50 shadow-2xl">
+                    <div className="bg-white/90 backdrop-blur-lg relative z-20 rounded-t-[3rem] pb-24 border-t border-white/50 shadow-2xl">
                         <div className="max-w-7xl mx-auto px-6 pt-24">
 
                             {/* Product Info Grid */}
