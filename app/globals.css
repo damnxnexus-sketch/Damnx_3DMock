@@ -6,12 +6,16 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --product-gradient: #fff;
+  /* Default */
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: var(--product-gradient, #fff); /* Fallback */
+  /* Use the variable set by JS */
+  background: var(--product-gradient);
   transition: background 1s ease;
+  min-height: 100vh;
 }
 
 @layer utilities {
@@ -22,7 +26,8 @@ body {
 
 /* Custom Selection */
 ::selection {
-  background-color: #f97316; /* orange-500 */
+  background-color: #f97316;
+  /* orange-500 */
   color: white;
 }
 
@@ -33,6 +38,8 @@ body {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }

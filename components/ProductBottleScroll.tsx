@@ -1,12 +1,14 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { useScroll, useTransform, motion } from 'framer-motion';
+import { useScroll } from 'framer-motion';
+import { Product } from '@/data/products';
+import ProductTextOverlays from './ProductTextOverlays';
 
 interface Props {
-    folderPath: string;
+    product: Product;
 }
 
-export default function ProductBottleScroll({ folderPath }: Props) {
+export default function ProductBottleScroll({ product }: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
@@ -19,18 +21,21 @@ export default function ProductBottleScroll({ folderPath }: Props) {
     useEffect(() => {
         const loadImages = async () => {
             const loadedImages: HTMLImageElement[] = [];
-            const imageCount = 80; // As found in directory
+            const imageCount = 80;
             let loadedCount = 0;
+
+            // Clear existing images when product changes to avoid flashing wrong product
+            setImages([]);
 
             for (let i = 1; i <= imageCount; i++) {
                 const img = new Image();
-                img.src = `${folderPath}/${i}.jpg`;
+                img.src = `${product.folderPath}/${i}.jpg`;
                 await new Promise((resolve) => {
                     img.onload = () => {
                         loadedCount++;
                         resolve(true);
                     };
-                    img.onerror = () => resolve(false); // Graceful fallback
+                    img.onerror = () => resolve(false);
                 });
                 loadedImages.push(img);
             }
@@ -38,20 +43,19 @@ export default function ProductBottleScroll({ folderPath }: Props) {
         };
 
         loadImages();
-    }, [folderPath]);
+    }, [product.folderPath]);
 
     // Canvas Drawing
     useEffect(() => {
         const render = () => {
             const canvas = canvasRef.current;
-            const progress = scrollYProgress.get(); // 0 to 1
+            const progress = scrollYProgress.get();
 
             if (!canvas || images.length === 0) return;
 
             const ctx = canvas.getContext('2d');
             if (!ctx) return;
 
-            // Calculate frame index
             const frameIndex = Math.min(
                 images.length - 1,
                 Math.floor(progress * (images.length - 1))
@@ -60,12 +64,10 @@ export default function ProductBottleScroll({ folderPath }: Props) {
             const img = images[frameIndex];
             if (!img) return;
 
-            // Responsive Contain Draw
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            // Maintain aspect ratio
-            const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8; // 0.8 to give some breathing room
+            const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
             const x = (canvas.width / 2) - (img.width / 2) * scale;
             const y = (canvas.height / 2) - (img.height / 2) * scale;
 
@@ -75,8 +77,8 @@ export default function ProductBottleScroll({ folderPath }: Props) {
             requestAnimationFrame(render);
         };
 
-        const unsubscribe = scrollYProgress.onChange(render); // Trigger on scroll change
-        const animId = requestAnimationFrame(render); // Initial render loop
+        const unsubscribe = scrollYProgress.onChange(render);
+        const animId = requestAnimationFrame(render);
 
         return () => {
             unsubscribe();
@@ -85,9 +87,10 @@ export default function ProductBottleScroll({ folderPath }: Props) {
     }, [scrollYProgress, images]);
 
     return (
-        <div ref={containerRef} className="relative h-[500vh] z-10 pointer-events-none">
+        <div ref={containerRef} className="relative h-[500vh] z-10">
             <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
                 <canvas ref={canvasRef} className="w-full h-full object-contain" />
+                <ProductTextOverlays scrollYProgress={scrollYProgress} product={product} />
             </div>
         </div>
     );

@@ -23,7 +23,7 @@ export default function Navbar() {
         >
             <div className="flex items-center gap-2">
                 {/* Abstract Banana/Lightning Icon */}
-                <svg w="32" h="32" viewBox="0 0 32 32" className="w-8 h-8 text-orange-500 fill-current">
+                <svg width="32" height="32" viewBox="0 0 32 32" className="w-8 h-8 text-orange-500 fill-current">
                     <path d="M8 2L6 8L18 8L16 14L26 14L24 20L12 20L10 26" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
                 <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500">
