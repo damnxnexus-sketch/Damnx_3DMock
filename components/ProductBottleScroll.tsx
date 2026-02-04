@@ -64,10 +64,15 @@ export default function ProductBottleScroll({ product }: Props) {
             const img = images[frameIndex];
             if (!img) return;
 
+            // Responsive Drawing logic
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.8;
+            // Scale to fill the screen (cover effect)
+            // Using Math.max guarantees the image covers the canvas completely
+            // We removed the 0.8 factor to ensure full-screen immersion
+            const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+
             const x = (canvas.width / 2) - (img.width / 2) * scale;
             const y = (canvas.height / 2) - (img.height / 2) * scale;
 
@@ -87,9 +92,9 @@ export default function ProductBottleScroll({ product }: Props) {
     }, [scrollYProgress, images]);
 
     return (
-        <div ref={containerRef} className="relative h-[500vh] z-10">
+        <div ref={containerRef} className="relative h-[300vh] z-10">
             <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
-                <canvas ref={canvasRef} className="w-full h-full object-contain" />
+                <canvas ref={canvasRef} className="w-full h-full object-cover" />
                 <ProductTextOverlays scrollYProgress={scrollYProgress} product={product} />
             </div>
         </div>
